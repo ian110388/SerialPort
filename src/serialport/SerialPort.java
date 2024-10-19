@@ -5,7 +5,6 @@
 package serialport;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
-import serialport.Globals;
 import vista.Principal;
 
 /**

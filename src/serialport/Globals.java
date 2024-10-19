@@ -13,7 +13,7 @@ import vista.Principal;
  */
 public class Globals {
     // PRINCIPAL
-    public static jssc.SerialPort serial_port = null;
+    public static jssc.SerialPort serial_port;
     public static Principal p;
     public static String title = "Serial Port";
     // PORT

@@ -7,12 +7,20 @@ package vista;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.intellijthemes.FlatXcodeDarkIJTheme;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import com.google.gson.Gson;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.UIManager;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortException;
+import modelo.config;
 
 import serialport.Globals;
 
@@ -21,6 +29,8 @@ import serialport.Globals;
  * @author angelivan
  */
 public final class Principal extends javax.swing.JFrame {
+    Gson g = new Gson();
+    config cfg = new config();
     Port w_port = null;
     private String st ="";
     private String s = "";
@@ -46,7 +56,7 @@ public final class Principal extends javax.swing.JFrame {
         
         initComponents();
         
-        
+        loadConfig();
         
         
         //CREANDO INSTANCIA DE VENTANAS
@@ -56,20 +66,47 @@ public final class Principal extends javax.swing.JFrame {
         Globals.wport.setDefaultCloseOperation(HIDE_ON_CLOSE);
         
         
-        Conectar("COM3");
+        
+        
     }
+    
+    public void loadConfig() {
+        File config = new File("config.json");
+        if(config.exists() && config.length() > 0){
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader("config.json"));
+                cfg = g.fromJson(reader, config.class);
+                Globals.port = cfg.getPort();
+                Globals.baud_rate = cfg.getBaud_rate();
+                Globals.parity = cfg.getParity();
+                Globals.bits = cfg.getBits();
+                Globals.stop_bits = cfg.getStop_bits();
+                Globals.flow_control = cfg.getFlow_control();
+                
+                System.out.println(cfg.getPort());
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
     
     public void Conectar(String port){
         
         Globals.serial_port = new SerialPort(port);
         try {
             Globals.serial_port.openPort();
-            this.setTitle(Globals.title + " - " + Globals.port);
+            this.setTitle(Globals.title + " - " + Globals.port + " - " + Globals.baud_rate);
             Globals.serial_port.setParams(
-                    SerialPort.BAUDRATE_115200,
-                    SerialPort.DATABITS_8,
-                    SerialPort.STOPBITS_1,
+                    // SerialPort.BAUDRATE_115200,
+                    // SerialPort.DATABITS_8,
+                    // SerialPort.STOPBITS_1,
+                    // SerialPort.PARITY_NONE
+                    Globals.baud_rate,
+                    Globals.bits,
+                    Globals.stop_bits,
                     SerialPort.PARITY_NONE);
+                                            
             Globals.serial_port.setEventsMask(SerialPort.MASK_RXCHAR);
             //serialPort1.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN |
             //                      SerialPort.FLOWCONTROL_RTSCTS_OUT);

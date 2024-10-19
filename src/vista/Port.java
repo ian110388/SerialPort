@@ -4,6 +4,8 @@
  */
 package vista;
 import com.google.gson.Gson;
+import java.io.FileWriter;
+import java.io.IOException;
 import jssc.SerialPortList;
 import modelo.config;
 import serialport.Globals;
@@ -20,6 +22,15 @@ public class Port extends javax.swing.JFrame {
     public Port() {
         initComponents();
         ListarPuertos();
+    }
+    
+    public void setconfig() {
+        ComboPort.getModel().setSelectedItem(Globals.port);
+        ComboBaudRate.setSelectedItem(String.valueOf(Globals.baud_rate));
+        ComboParity.setSelectedItem(Globals.parity);
+        ComboBits.setSelectedItem(String.valueOf(Globals.bits));
+        ComboStopBits.setSelectedItem(String.valueOf(Globals.stop_bits));
+        ComboFlowControl.setSelectedItem(Globals.flow_control);
     }
 
     /**
@@ -50,6 +61,11 @@ public class Port extends javax.swing.JFrame {
         ButtonCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Serial port"));
 
@@ -225,7 +241,20 @@ public class Port extends javax.swing.JFrame {
     // https://github.com/google/gson/blob/main/UserGuide.md
     private void ButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonOkActionPerformed
         Globals.port = ComboPort.getSelectedItem().toString();
-        Globals.p.Conectar(Globals.port);
+        
+        System.out.println(Globals.serial_port);
+        
+        if(Globals.serial_port != null){
+            System.out.println("El puerto no es nulo");
+            try {
+                Globals.serial_port.closePort();
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
+        } else {
+            System.out.println("El puerto es nulo");
+        }
+        
         
         config cfg = new config();
         Gson gson = new Gson();
@@ -236,8 +265,25 @@ public class Port extends javax.swing.JFrame {
         cfg.setStop_bits(Integer.parseInt(ComboStopBits.getSelectedItem().toString()));
         cfg.setFlow_control(ComboFlowControl.getSelectedItem().toString());
         
-        String json = gson.toJson(cfg);
-        System.out.println(json);
+        Globals.port = cfg.getPort();
+        Globals.baud_rate = cfg.getBaud_rate();
+        Globals.parity = cfg.getParity();
+        Globals.bits = cfg.getBits();
+        Globals.stop_bits = cfg.getStop_bits();
+        Globals.flow_control = cfg.getFlow_control();
+        
+        Globals.p.Conectar(Globals.port);
+        
+        try {
+            FileWriter output = new FileWriter("config.json");
+            gson.toJson(cfg, output);
+            output.close();
+        } catch (IOException ex) {
+            System.out.println(ex.toString());
+        }
+        
+        //String json = gson.toJson(cfg);
+        //System.out.println(json);
         
         this.setVisible(false);
     }//GEN-LAST:event_ButtonOkActionPerformed
@@ -245,6 +291,10 @@ public class Port extends javax.swing.JFrame {
     private void ButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonCancelActionPerformed
         this.setVisible(false);
     }//GEN-LAST:event_ButtonCancelActionPerformed
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        setconfig();
+    }//GEN-LAST:event_formWindowActivated
     
     private void ListarPuertos(){
         String[] ports = SerialPortList.getPortNames();
