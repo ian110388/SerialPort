@@ -4,6 +4,7 @@
  */
 package vista;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.intellijthemes.FlatXcodeDarkIJTheme;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import java.awt.Color;
@@ -39,8 +40,8 @@ public final class Principal extends javax.swing.JFrame {
         
         //FlatLightLaf.setup();
         //FlatArcOrangeIJTheme.setup();
-        FlatXcodeDarkIJTheme.setup();
-        //FlatMacDarkLaf.setup();
+        //FlatXcodeDarkIJTheme.setup();
+        FlatMacDarkLaf.setup();
         
         
         initComponents();
@@ -55,7 +56,7 @@ public final class Principal extends javax.swing.JFrame {
         Globals.wport.setDefaultCloseOperation(HIDE_ON_CLOSE);
         
         
-        
+        Conectar("COM3");
     }
     
     public void Conectar(String port){
