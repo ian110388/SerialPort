@@ -3,13 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package vista;
-
-import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.FlatLightLaf;
-import com.formdev.flatlaf.intellijthemes.FlatXcodeDarkIJTheme;
-import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.google.gson.Gson;
-import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,13 +15,10 @@ import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.UIManager;
-import javax.swing.plaf.FileChooserUI;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortException;
 import modelo.config;
-
 import serialport.Globals;
 
 /**
@@ -45,35 +36,7 @@ public final class Principal extends javax.swing.JFrame {
      * Creates new form Principal
      */
     public Principal() {
-        
-        UIManager.put( "Button.arc", 15 );
-        UIManager.put( "ToolBar.background",Color.getColor("#f8fafc") );
-        UIManager.put( "Component.arc", 15 );
-        //UIManager.put( "Component.arrowType", "chevron" );
-        UIManager.put( "Component.arrowType", "triangle" );
-        UIManager.put( "TextComponent.arc", 15 );
-        
-        //ButtonConnect.putClientProperty("Button.hoverBackground","#f8fafc");
-        
-        
-        
-        //FlatLightLaf.setup();
-        //FlatArcOrangeIJTheme.setup();
-        //FlatXcodeDarkIJTheme.setup();
-        //FlatMacDarkLaf.setup();
-        
-        try {
-            UIManager.setLookAndFeel( new FlatMacDarkLaf() );
-        } catch( Exception ex ) {
-            System.err.println( "Failed to initialize LaF" );
-        }
-        
-        
-        
-        
         initComponents();
-        
-        
         loadConfig();
         
         
@@ -82,10 +45,7 @@ public final class Principal extends javax.swing.JFrame {
         Globals.wport.setTitle("Configuration");
         Globals.wport.setLocationRelativeTo(null);
         Globals.wport.setDefaultCloseOperation(HIDE_ON_CLOSE);
-        
-        
-        
-        
+          
     }
     
     public void loadConfig() {
@@ -129,8 +89,6 @@ public final class Principal extends javax.swing.JFrame {
             //serialPort1.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN |
             //                      SerialPort.FLOWCONTROL_RTSCTS_OUT);
             Globals.serial_port.addEventListener((SerialPortEvent serialPortEvent) -> {
-                //System.out.println(serialPortEvent.getEventType());
-                //System.out.println(serialPortEvent.getEventValue());
                 try {
 
                     if(serialPortEvent.isRXCHAR() && serialPortEvent.getEventValue() > 0) {
@@ -159,13 +117,11 @@ public final class Principal extends javax.swing.JFrame {
 
 
                 } catch ( Exception e ) {
-                    //log.logger.warning(e.toString());
                     System.out.println(e.toString());
                 }
 
 
             });
-            //System.out.println(s);
 
         } catch (SerialPortException ex) {
             System.out.println(ex.toString());
@@ -184,7 +140,7 @@ public final class Principal extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         textAreaTerm = new javax.swing.JTextArea();
-        textField1 = new javax.swing.JTextField();
+        textFieldMessage = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jToolBar1 = new javax.swing.JToolBar();
         ButtonConnect = new javax.swing.JButton();
@@ -205,13 +161,13 @@ public final class Principal extends javax.swing.JFrame {
         textAreaTerm.setFocusable(false);
         jScrollPane1.setViewportView(textAreaTerm);
 
-        textField1.addKeyListener(new java.awt.event.KeyAdapter() {
+        textFieldMessage.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                textField1KeyPressed(evt);
+                textFieldMessageKeyPressed(evt);
             }
         });
 
-        jButton1.setText("Button");
+        jButton1.setText("Send");
         jButton1.setPreferredSize(new java.awt.Dimension(90, 30));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -240,7 +196,7 @@ public final class Principal extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(textField1)
+                        .addComponent(textFieldMessage)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -253,7 +209,7 @@ public final class Principal extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(textField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(textFieldMessage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -306,21 +262,21 @@ public final class Principal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void textField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textField1KeyPressed
+    private void textFieldMessageKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textFieldMessageKeyPressed
         if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
             try {
-                Globals.serial_port.writeString(textField1.getText() + "\r\n");
-                textField1.setText("");
+                Globals.serial_port.writeString(textFieldMessage.getText() + "\r\n");
+                textFieldMessage.setText("");
             } catch (SerialPortException ex) {
                 throw new RuntimeException(ex);
             }
         }
-    }//GEN-LAST:event_textField1KeyPressed
+    }//GEN-LAST:event_textFieldMessageKeyPressed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            Globals.serial_port.writeString(textField1.getText() + "\r\n");
-            textField1.setText("");
+            Globals.serial_port.writeString(textFieldMessage.getText() + "\r\n");
+            textFieldMessage.setText("");
         } catch (SerialPortException ex) {
             throw new RuntimeException(ex);
         }
@@ -332,18 +288,18 @@ public final class Principal extends javax.swing.JFrame {
 
     private void MenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemSaveActionPerformed
         String content = textAreaTerm.getText();
-        JFileChooser chooser = new JFileChooser();
-        chooser.showOpenDialog(this);
-        File file = chooser.getSelectedFile();
-        
         try {
-            FileWriter writer = new FileWriter(file);
-            PrintWriter pr = new PrintWriter(writer);
-            pr.print(content);
-            pr.close();
-            writer.close();
+            JFileChooser chooser = new JFileChooser();
+            if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                File file = chooser.getSelectedFile();
+                FileWriter writer = new FileWriter(file);
+                PrintWriter pr = new PrintWriter(writer);
+                pr.print(content);
+                pr.close();
+                writer.close();
+            }
         } catch (IOException ex) {
-            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.toString());
         }
     }//GEN-LAST:event_MenuItemSaveActionPerformed
 
@@ -360,6 +316,6 @@ public final class Principal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTextArea textAreaTerm;
-    private javax.swing.JTextField textField1;
+    private javax.swing.JTextField textFieldMessage;
     // End of variables declaration//GEN-END:variables
 }
