@@ -6,6 +6,7 @@ package serialport;
 
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import java.awt.Color;
+import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 import vista.Principal;
@@ -44,6 +45,7 @@ public class SerialPort {
         Globals.p.setLocationRelativeTo(null);
         Globals.p.setTitle(Globals.title);
         Globals.p.setVisible(true);
+        
     }
     
 }

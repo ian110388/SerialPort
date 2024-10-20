@@ -4,6 +4,7 @@
  */
 package serialport;
 
+import vista.Acerca;
 import vista.Port;
 import vista.Principal;
 
@@ -17,11 +18,13 @@ public class Globals {
     public static Principal p;
     public static String title = "Serial Port";
     // PORT
-    public static Port wport;
+    public static Port w_port;
     public static String port;
     public static int baud_rate;
     public static String parity;
     public static int bits;
     public static int stop_bits;
     public static String flow_control;
+    // ACERCA
+    public static Acerca w_about;
 }

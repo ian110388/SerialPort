@@ -4,6 +4,7 @@
  */
 package vista;
 import com.google.gson.Gson;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
@@ -36,15 +38,30 @@ public final class Principal extends javax.swing.JFrame {
      * Creates new form Principal
      */
     public Principal() {
+        this.setIconImage(new ImageIcon(getClass().getResource("/resources/icon.png")).getImage());
         initComponents();
         loadConfig();
         
+        //this.setIconImage(new ImageIcon(getClass().getResource("/resources/icon.png").getFile()).getImage());
+        //this.setIconImage(new ImageIcon(getClass().getResource("/resources/icon.png")).getImage());
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/icon.png")));
+        
+        System.out.println(getClass().getResource("/resources/icon.png").getFile());
         
         //CREANDO INSTANCIA DE VENTANAS
-        Globals.wport = new Port();
-        Globals.wport.setTitle("Configuration");
-        Globals.wport.setLocationRelativeTo(null);
-        Globals.wport.setDefaultCloseOperation(HIDE_ON_CLOSE);
+        Globals.w_port = new Port();
+        Globals.w_port.setTitle("Configuration");
+        Globals.w_port.setLocationRelativeTo(null);
+        Globals.w_port.setDefaultCloseOperation(HIDE_ON_CLOSE);
+        Globals.w_port.setIconImage(new ImageIcon(getClass().getResource("/resources/icon.png")).getImage());
+        
+        Globals.w_about = new Acerca();
+        Globals.w_about.setTitle("About");
+        Globals.w_about.setLocationRelativeTo(null);
+        Globals.w_about.setDefaultCloseOperation(HIDE_ON_CLOSE);
+        Globals.w_about.setIconImage(new ImageIcon(getClass().getResource("/resources/icon.png")).getImage());
+        
+        
           
     }
     
@@ -145,10 +162,12 @@ public final class Principal extends javax.swing.JFrame {
         jToolBar1 = new javax.swing.JToolBar();
         ButtonConnect = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        MenuFile = new javax.swing.JMenu();
         MenuItemSave = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        MenuConfiguration = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
+        MenuHelp = new javax.swing.JMenu();
+        MenuItemAcerca = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -217,8 +236,8 @@ public final class Principal extends javax.swing.JFrame {
 
         jMenuBar1.setForeground(getBackground());
 
-        jMenu1.setBackground(new java.awt.Color(19, 112, 206));
-        jMenu1.setText("File");
+        MenuFile.setBackground(new java.awt.Color(19, 112, 206));
+        MenuFile.setText("File");
 
         MenuItemSave.setText("Save As...");
         MenuItemSave.setPreferredSize(new java.awt.Dimension(150, 25));
@@ -227,13 +246,13 @@ public final class Principal extends javax.swing.JFrame {
                 MenuItemSaveActionPerformed(evt);
             }
         });
-        jMenu1.add(MenuItemSave);
+        MenuFile.add(MenuItemSave);
 
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(MenuFile);
 
-        jMenu2.setBackground(new java.awt.Color(19, 112, 206));
-        jMenu2.setForeground(new java.awt.Color(88, 88, 88));
-        jMenu2.setText("Configuration");
+        MenuConfiguration.setBackground(new java.awt.Color(19, 112, 206));
+        MenuConfiguration.setForeground(new java.awt.Color(88, 88, 88));
+        MenuConfiguration.setText("Configuration");
 
         jMenuItem2.setText("Port");
         jMenuItem2.setPreferredSize(new java.awt.Dimension(150, 25));
@@ -242,9 +261,21 @@ public final class Principal extends javax.swing.JFrame {
                 jMenuItem2ActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem2);
+        MenuConfiguration.add(jMenuItem2);
 
-        jMenuBar1.add(jMenu2);
+        jMenuBar1.add(MenuConfiguration);
+
+        MenuHelp.setText("Help");
+
+        MenuItemAcerca.setText("Acerca");
+        MenuItemAcerca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuItemAcercaActionPerformed(evt);
+            }
+        });
+        MenuHelp.add(MenuItemAcerca);
+
+        jMenuBar1.add(MenuHelp);
 
         setJMenuBar(jMenuBar1);
 
@@ -283,7 +314,7 @@ public final class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        Globals.wport.setVisible(true);
+        Globals.w_port.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void MenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemSaveActionPerformed
@@ -303,13 +334,19 @@ public final class Principal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_MenuItemSaveActionPerformed
 
+    private void MenuItemAcercaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemAcercaActionPerformed
+        Globals.w_about.setVisible(true);
+    }//GEN-LAST:event_MenuItemAcercaActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonConnect;
+    private javax.swing.JMenu MenuConfiguration;
+    private javax.swing.JMenu MenuFile;
+    private javax.swing.JMenu MenuHelp;
+    private javax.swing.JMenuItem MenuItemAcerca;
     private javax.swing.JMenuItem MenuItemSave;
     private javax.swing.JButton jButton1;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;

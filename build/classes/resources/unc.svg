@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="16px"
+   viewBox="0 0 16 16"
+   width="16px"
+   version="1.1"
+   id="svg2"
+   sodipodi:docname="unc.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   inkscape:export-filename="unc.png"
+   inkscape:export-xdpi="192"
+   inkscape:export-ydpi="192"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath11">
+      <g
+         inkscape:label="Clip"
+         id="use11">
+        <path
+           style="fill:#ffffff"
+           d="m 6.7369167,3.9092595 -0.005,6.9082265 2.5918266,-0.0064 -0.038805,-6.9051472 z"
+           id="path12" />
+      </g>
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath14">
+      <g
+         inkscape:label="Clip"
+         id="use14">
+        <path
+           style="fill:#ffffff"
+           d="m 6.5453573,2.9933468 0.048583,8.0076152 2.8825535,0.0064 -0.025023,-8.0261701 z"
+           id="path2" />
+      </g>
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath2">
+      <rect
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.0954958;stroke-dasharray:none;stroke-opacity:1"
+         id="rect3"
+         width="5.8034115"
+         height="6.1849904"
+         x="2.158181"
+         y="4.2236814" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath2-3">
+      <rect
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.0954958;stroke-dasharray:none;stroke-opacity:1"
+         id="rect3-6"
+         width="5.8034115"
+         height="6.1849904"
+         x="2.158181"
+         y="4.2236814" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="namedview2"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="25.367456"
+     inkscape:cx="3.2719087"
+     inkscape:cy="9.1652864"
+     inkscape:window-width="1360"
+     inkscape:window-height="731"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     showgrid="true"
+     showguides="true">
+    <inkscape:grid
+       id="grid2"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="1"
+       spacingy="1"
+       empcolor="#0099e5"
+       empopacity="0.30196078"
+       color="#0099e5"
+       opacity="0.14901961"
+       empspacing="5"
+       dotted="false"
+       gridanglex="30"
+       gridanglez="30"
+       visible="true" />
+  </sodipodi:namedview>
+  <g
+     id="g2-7"
+     clip-path="url(#clipPath2-3)"
+     transform="matrix(-1,0,0,1,17.378886,0.7856227)">
+    <rect
+       style="fill:#000000;stroke-width:1.90616"
+       id="rect5-2-5"
+       width="3.1115184"
+       height="1.6458857"
+       x="2.2369373"
+       y="6.4973288" />
+    <rect
+       style="fill:#000000;stroke-width:1.90616"
+       id="rect5-2-1-3"
+       width="3.1115184"
+       height="1.6458857"
+       x="10.75093"
+       y="6.4927893" />
+    <ellipse
+       style="fill:#000000;stroke-width:1.80071"
+       id="path5-5"
+       cx="8.1000004"
+       cy="7.2998366"
+       rx="3.5"
+       ry="3" />
+  </g>
+  <g
+     id="g3"
+     transform="translate(0,0.4995083)">
+    <g
+       id="g2"
+       clip-path="url(#clipPath2)"
+       transform="translate(-1.2659373,0.22965506)">
+      <rect
+         style="fill:#000000;stroke-width:1.90616"
+         id="rect5-2"
+         width="3.1115184"
+         height="1.6458857"
+         x="2.2369373"
+         y="6.4973288" />
+      <rect
+         style="fill:#000000;stroke-width:1.90616"
+         id="rect5-2-1"
+         width="3.1115184"
+         height="1.6458857"
+         x="10.75093"
+         y="6.4927893" />
+      <ellipse
+         style="fill:#000000;stroke-width:1.80071"
+         id="path5"
+         cx="8.1000004"
+         cy="7.2998366"
+         rx="3.5"
+         ry="3" />
+    </g>
+    <rect
+       style="fill:#000000;stroke-width:0.841559"
+       id="rect5-4"
+       width="1.3"
+       height="0.76785368"
+       x="6.6830001"
+       y="6.0662203" />
+    <rect
+       style="display:inline;fill:#000000;stroke-width:0.841559"
+       id="rect5"
+       width="1.3"
+       height="0.76785368"
+       x="6.6830001"
+       y="8.2177429" />
+  </g>
+</svg>
