@@ -6,6 +6,10 @@ package vista;
 import com.google.gson.Gson;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import jssc.SerialPortException;
 import jssc.SerialPortList;
 import modelo.config;
 import serialport.Globals;
@@ -274,7 +278,11 @@ public class Port extends javax.swing.JFrame {
         Globals.stop_bits = cfg.getStop_bits();
         Globals.flow_control = cfg.getFlow_control();
         
-        Globals.p.Conectar(Globals.port);
+//        try {
+//            Globals.p.Conectar(Globals.port);
+//        } catch (SerialPortException ex) {
+//            JOptionPane.showMessageDialog(this, ex);
+//        }
         
         try {
             FileWriter output = new FileWriter("config.json");

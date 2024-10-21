@@ -5,6 +5,7 @@
 package vista;
 
 import java.awt.Image;
+import java.awt.Toolkit;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -20,19 +21,23 @@ public class Acerca extends javax.swing.JFrame {
      */
     public Acerca() {
         initComponents();
-        SetLblFoto(getClass().getResource("/resources/icon.png").getFile());
+        //setLabelImage(this.getClass().getResource("/resources/icon.png").getPath(), LabelIcon);
+        setLabelImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/icon.png")), LabelIcon);
     }
     
-    public void SetLblFoto(String foto){
-        //System.out.println(foto);
-        LabelIcon.setIcon(GetIconImageFile(foto, LabelIcon));
+    
+    public void setLabelImage(String path, JLabel label) {
+        ImageIcon image = new ImageIcon(path);
+        Icon icon = new ImageIcon( image.getImage().getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_DEFAULT) );
+        label.setIcon(icon);
     }
     
-    public Icon GetIconImageFile(String image, JLabel label){
-       ImageIcon fot = new ImageIcon(image);
-       final Icon icono = new ImageIcon(fot.getImage().getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_DEFAULT));
-       return icono;
+    public void setLabelImage(Image path, JLabel label) {
+        Icon icon = new ImageIcon( path.getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_DEFAULT) );
+        label.setIcon(icon);
+        this.repaint();
     }
+    
     
 
     /**
@@ -46,27 +51,61 @@ public class Acerca extends javax.swing.JFrame {
 
         jLayeredPane1 = new javax.swing.JLayeredPane();
         LabelIcon = new javax.swing.JLabel();
+        LabelAppName = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jToggleButton1 = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
+        LabelAppName.setFont(new java.awt.Font("Cantarell", 1, 24)); // NOI18N
+        LabelAppName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LabelAppName.setText("SerialPort");
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Angel Ivan");
+
+        jToggleButton1.setText("1.0.0");
+        jToggleButton1.setEnabled(false);
+
         jLayeredPane1.setLayer(LabelIcon, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(LabelAppName, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(jToggleButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
         jLayeredPane1Layout.setHorizontalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
-                .addContainerGap(51, Short.MAX_VALUE)
-                .addComponent(LabelIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44))
+                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jLayeredPane1Layout.createSequentialGroup()
+                        .addContainerGap(73, Short.MAX_VALUE)
+                        .addComponent(LabelIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 67, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jLayeredPane1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(LabelAppName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jToggleButton1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addComponent(LabelIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(234, Short.MAX_VALUE))
+                .addGap(33, 33, 33)
+                .addComponent(LabelIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(LabelAppName)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jToggleButton1)
+                .addContainerGap(70, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -86,7 +125,10 @@ public class Acerca extends javax.swing.JFrame {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel LabelAppName;
     private javax.swing.JLabel LabelIcon;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLayeredPane jLayeredPane1;
+    private javax.swing.JToggleButton jToggleButton1;
     // End of variables declaration//GEN-END:variables
 }

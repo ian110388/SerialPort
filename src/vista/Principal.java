@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortException;
@@ -86,10 +87,10 @@ public final class Principal extends javax.swing.JFrame {
     }
     
     
-    public void Conectar(String port){
+    public void Conectar(String port) throws SerialPortException{
         
         Globals.serial_port = new SerialPort(port);
-        try {
+        
             Globals.serial_port.openPort();
             this.setTitle(Globals.title + " - " + Globals.port + " - " + Globals.baud_rate);
             Globals.serial_port.setParams(
@@ -140,9 +141,7 @@ public final class Principal extends javax.swing.JFrame {
 
             });
 
-        } catch (SerialPortException ex) {
-            System.out.println(ex.toString());
-        }
+        
     }
 
     /**
@@ -159,8 +158,10 @@ public final class Principal extends javax.swing.JFrame {
         textAreaTerm = new javax.swing.JTextArea();
         textFieldMessage = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
-        jToolBar1 = new javax.swing.JToolBar();
-        ButtonConnect = new javax.swing.JButton();
+        ToolBar = new javax.swing.JToolBar();
+        ToggleButtonConnect = new javax.swing.JToggleButton();
+        jSeparator1 = new javax.swing.JToolBar.Separator();
+        LabelPortStatus = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         MenuFile = new javax.swing.JMenu();
         MenuItemSave = new javax.swing.JMenuItem();
@@ -194,17 +195,23 @@ public final class Principal extends javax.swing.JFrame {
             }
         });
 
-        jToolBar1.setRollover(true);
+        ToolBar.setRollover(true);
 
-        ButtonConnect.setBackground(new java.awt.Color(150, 150, 150));
-        ButtonConnect.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/view-fullscreen-symbolic.png"))); // NOI18N
-        ButtonConnect.setToolTipText("");
-        ButtonConnect.setFocusable(false);
-        ButtonConnect.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        ButtonConnect.setMaximumSize(new java.awt.Dimension(40, 24));
-        ButtonConnect.setPreferredSize(new java.awt.Dimension(40, 24));
-        ButtonConnect.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(ButtonConnect);
+        ToggleButtonConnect.setBackground(new java.awt.Color(96, 96, 96));
+        ToggleButtonConnect.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/unc.png"))); // NOI18N
+        ToggleButtonConnect.setFocusable(false);
+        ToggleButtonConnect.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        ToggleButtonConnect.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ToggleButtonConnect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ToggleButtonConnectActionPerformed(evt);
+            }
+        });
+        ToolBar.add(ToggleButtonConnect);
+        ToolBar.add(jSeparator1);
+
+        LabelPortStatus.setText("Disconnected");
+        ToolBar.add(LabelPortStatus);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -219,7 +226,7 @@ public final class Principal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(ToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -231,7 +238,7 @@ public final class Principal extends javax.swing.JFrame {
                     .addComponent(textFieldMessage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(ToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jMenuBar1.setForeground(getBackground());
@@ -338,20 +345,43 @@ public final class Principal extends javax.swing.JFrame {
         Globals.w_about.setVisible(true);
     }//GEN-LAST:event_MenuItemAcercaActionPerformed
 
+    private void ToggleButtonConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ToggleButtonConnectActionPerformed
+        if(ToggleButtonConnect.isSelected()){
+            try {
+                Globals.p.Conectar(Globals.port);
+                ToggleButtonConnect.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/con.png")));
+                LabelPortStatus.setText("Connected");
+            } catch (SerialPortException ex) {
+                JOptionPane.showMessageDialog(this, ex);
+            }
+        } else {
+            try {
+                Globals.serial_port.closePort();
+                ToggleButtonConnect.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/unc.png")));
+                this.setTitle(Globals.title);
+                LabelPortStatus.setText("Disconnected");
+            } catch (SerialPortException ex) {
+                JOptionPane.showMessageDialog(this, ex);
+            }
+        }
+    }//GEN-LAST:event_ToggleButtonConnectActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton ButtonConnect;
+    private javax.swing.JLabel LabelPortStatus;
     private javax.swing.JMenu MenuConfiguration;
     private javax.swing.JMenu MenuFile;
     private javax.swing.JMenu MenuHelp;
     private javax.swing.JMenuItem MenuItemAcerca;
     private javax.swing.JMenuItem MenuItemSave;
+    private javax.swing.JToggleButton ToggleButtonConnect;
+    private javax.swing.JToolBar ToolBar;
     private javax.swing.JButton jButton1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JTextArea textAreaTerm;
     private javax.swing.JTextField textFieldMessage;
     // End of variables declaration//GEN-END:variables
