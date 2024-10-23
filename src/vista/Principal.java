@@ -5,6 +5,10 @@
 package vista;
 import com.google.gson.Gson;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,8 +20,12 @@ import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortException;
@@ -34,6 +42,15 @@ public final class Principal extends javax.swing.JFrame {
     Port w_port = null;
     private String st ="";
     private String s = "";
+    
+    //POP UP MENU ITEMS
+    private boolean scroll = true;
+    private JCheckBoxMenuItem AutoScroll;
+    private JMenuItem SelectAll;
+    private JMenuItem Copy;
+            
+    
+    
 
     /**
      * Creates new form Principal
@@ -41,6 +58,7 @@ public final class Principal extends javax.swing.JFrame {
     public Principal() {
         this.setIconImage(new ImageIcon(getClass().getResource("/resources/icon.png")).getImage());
         initComponents();
+        PopupMenuInit();
         loadConfig();
         
         //this.setIconImage(new ImageIcon(getClass().getResource("/resources/icon.png").getFile()).getImage());
@@ -64,6 +82,53 @@ public final class Principal extends javax.swing.JFrame {
         
         
           
+    }
+    
+    public void PopupMenuInit() {
+        // POP_SELECT ALL
+        SelectAll = new JMenuItem("Select all");
+        PopupMenu.add(SelectAll);
+        // POP_COPY
+        Copy = new JMenuItem("Copy");
+        PopupMenu.add(Copy);
+        
+        // POP_AUTOSCROLL
+        AutoScroll = new JCheckBoxMenuItem("AutoScroll");
+        AutoScroll.setSelected(scroll);
+        MenuItemAutoScroll.setSelected(scroll);
+        PopupMenu.add(AutoScroll);
+        textAreaTerm.setComponentPopupMenu(PopupMenu);
+        
+        Copy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
+                StringSelection sel = new StringSelection(textAreaTerm.getSelectedText());
+                clip.setContents(sel, sel);
+                
+            }
+        });
+        
+        SelectAll.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                textAreaTerm.requestFocusInWindow();
+                textAreaTerm.selectAll();
+            }
+        });
+        
+        
+        AutoScroll.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if(AutoScroll.isSelected()){
+                    scroll = true;
+                } else if (!AutoScroll.isSelected()) {
+                    scroll = false;
+                }
+                MenuItemAutoScroll.setSelected(scroll);
+            }
+        });
     }
     
     public void loadConfig() {
@@ -121,7 +186,10 @@ public final class Principal extends javax.swing.JFrame {
 
                         if (st.contains("\r")){
                             textAreaTerm.append(st);
-                            textAreaTerm.setCaretPosition( textAreaTerm.getDocument().getLength() );
+                            if(scroll){
+                                textAreaTerm.setCaretPosition( textAreaTerm.getDocument().getLength() );
+                            }
+                            
                             try {
                                 st = "";
                                 s = "";
@@ -153,6 +221,7 @@ public final class Principal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        PopupMenu = new javax.swing.JPopupMenu();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         textAreaTerm = new javax.swing.JTextArea();
@@ -166,7 +235,8 @@ public final class Principal extends javax.swing.JFrame {
         MenuFile = new javax.swing.JMenu();
         MenuItemSave = new javax.swing.JMenuItem();
         MenuConfiguration = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        MenuItemPort = new javax.swing.JMenuItem();
+        MenuItemAutoScroll = new javax.swing.JCheckBoxMenuItem();
         MenuHelp = new javax.swing.JMenu();
         MenuItemAcerca = new javax.swing.JMenuItem();
 
@@ -178,7 +248,6 @@ public final class Principal extends javax.swing.JFrame {
         textAreaTerm.setColumns(20);
         textAreaTerm.setFont(textAreaTerm.getFont());
         textAreaTerm.setRows(5);
-        textAreaTerm.setFocusable(false);
         jScrollPane1.setViewportView(textAreaTerm);
 
         textFieldMessage.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -246,7 +315,7 @@ public final class Principal extends javax.swing.JFrame {
         MenuFile.setBackground(new java.awt.Color(19, 112, 206));
         MenuFile.setText("File");
 
-        MenuItemSave.setText("Save As...");
+        MenuItemSave.setText("Save Output..");
         MenuItemSave.setPreferredSize(new java.awt.Dimension(150, 25));
         MenuItemSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -261,14 +330,23 @@ public final class Principal extends javax.swing.JFrame {
         MenuConfiguration.setForeground(new java.awt.Color(88, 88, 88));
         MenuConfiguration.setText("Configuration");
 
-        jMenuItem2.setText("Port");
-        jMenuItem2.setPreferredSize(new java.awt.Dimension(150, 25));
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        MenuItemPort.setText("Port");
+        MenuItemPort.setPreferredSize(new java.awt.Dimension(150, 25));
+        MenuItemPort.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                MenuItemPortActionPerformed(evt);
             }
         });
-        MenuConfiguration.add(jMenuItem2);
+        MenuConfiguration.add(MenuItemPort);
+
+        MenuItemAutoScroll.setSelected(true);
+        MenuItemAutoScroll.setText("Auto scroll");
+        MenuItemAutoScroll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuItemAutoScrollActionPerformed(evt);
+            }
+        });
+        MenuConfiguration.add(MenuItemAutoScroll);
 
         jMenuBar1.add(MenuConfiguration);
 
@@ -320,9 +398,9 @@ public final class Principal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void MenuItemPortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemPortActionPerformed
         Globals.w_port.setVisible(true);
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_MenuItemPortActionPerformed
 
     private void MenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemSaveActionPerformed
         String content = textAreaTerm.getText();
@@ -366,6 +444,16 @@ public final class Principal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ToggleButtonConnectActionPerformed
 
+    private void MenuItemAutoScrollActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemAutoScrollActionPerformed
+        // TODO add your handling code here:
+        if(MenuItemAutoScroll.isSelected()){
+            scroll = true;
+        } else if(!MenuItemAutoScroll.isSelected()){
+            scroll = false;
+        }
+        AutoScroll.setSelected(scroll);
+    }//GEN-LAST:event_MenuItemAutoScrollActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LabelPortStatus;
@@ -373,12 +461,14 @@ public final class Principal extends javax.swing.JFrame {
     private javax.swing.JMenu MenuFile;
     private javax.swing.JMenu MenuHelp;
     private javax.swing.JMenuItem MenuItemAcerca;
+    private javax.swing.JCheckBoxMenuItem MenuItemAutoScroll;
+    private javax.swing.JMenuItem MenuItemPort;
     private javax.swing.JMenuItem MenuItemSave;
+    private javax.swing.JPopupMenu PopupMenu;
     private javax.swing.JToggleButton ToggleButtonConnect;
     private javax.swing.JToolBar ToolBar;
     private javax.swing.JButton jButton1;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar.Separator jSeparator1;

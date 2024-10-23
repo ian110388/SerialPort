@@ -99,7 +99,7 @@
         </Component>
         <Component class="javax.swing.JToggleButton" name="jToggleButton1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="1.0.0"/>
+            <Property name="text" type="java.lang.String" value="1.0.1"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>
