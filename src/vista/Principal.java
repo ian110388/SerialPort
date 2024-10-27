@@ -6,7 +6,9 @@ package vista;
 import com.google.gson.Gson;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -17,6 +19,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -39,15 +43,23 @@ import serialport.Globals;
 public final class Principal extends javax.swing.JFrame {
     Gson g = new Gson();
     config cfg = new config();
-    Port w_port = null;
     private String st ="";
     private String s = "";
+    List<String> history = new ArrayList<>();
+    int history_lenght = 0;
+    int index = -1;
     
     //POP UP MENU ITEMS
     private boolean scroll = true;
     private JCheckBoxMenuItem AutoScroll;
     private JMenuItem SelectAll;
     private JMenuItem Copy;
+    private JMenuItem Clear;
+    
+    //POP UP MENU DOWN ITEMS
+    private JMenuItem Paste;
+    
+    private boolean connected = false;
             
     
     
@@ -59,13 +71,13 @@ public final class Principal extends javax.swing.JFrame {
         this.setIconImage(new ImageIcon(getClass().getResource("/resources/icon.png")).getImage());
         initComponents();
         PopupMenuInit();
+        PopupMenuDownInit();
         loadConfig();
         
         //this.setIconImage(new ImageIcon(getClass().getResource("/resources/icon.png").getFile()).getImage());
         //this.setIconImage(new ImageIcon(getClass().getResource("/resources/icon.png")).getImage());
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/icon.png")));
-        
-        System.out.println(getClass().getResource("/resources/icon.png").getFile());
+       
         
         //CREANDO INSTANCIA DE VENTANAS
         Globals.w_port = new Port();
@@ -85,6 +97,9 @@ public final class Principal extends javax.swing.JFrame {
     }
     
     public void PopupMenuInit() {
+        // POP_CLEAR
+        Clear = new JMenuItem("Clear");
+        PopupMenu.add(Clear);
         // POP_SELECT ALL
         SelectAll = new JMenuItem("Select all");
         PopupMenu.add(SelectAll);
@@ -98,6 +113,13 @@ public final class Principal extends javax.swing.JFrame {
         MenuItemAutoScroll.setSelected(scroll);
         PopupMenu.add(AutoScroll);
         textAreaTerm.setComponentPopupMenu(PopupMenu);
+        
+        Clear.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                textAreaTerm.setText("");
+            }
+        });
         
         Copy.addActionListener(new ActionListener() {
             @Override
@@ -131,6 +153,28 @@ public final class Principal extends javax.swing.JFrame {
         });
     }
     
+    public void PopupMenuDownInit() {
+        // POP_PASTE
+        Paste = new JMenuItem("Paste");
+        PopupMenuDown.add(Paste);
+        textFieldMessage.setComponentPopupMenu(PopupMenuDown);
+        
+        Paste.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+               Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
+                try {
+                    String c = (String) clip.getData(DataFlavor.stringFlavor);
+                    textFieldMessage.setText(c);
+                } catch (UnsupportedFlavorException ex) {
+                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+    }
+    
     public void loadConfig() {
         File config = new File("config.json");
         if(config.exists() && config.length() > 0){
@@ -144,7 +188,6 @@ public final class Principal extends javax.swing.JFrame {
                 Globals.stop_bits = cfg.getStop_bits();
                 Globals.flow_control = cfg.getFlow_control();
                 
-                System.out.println(cfg.getPort());
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -181,7 +224,7 @@ public final class Principal extends javax.swing.JFrame {
                             return;
                         }
 
-                        s = new String(buf, 0, buf.length);
+                        s = new String(buf, 0, buf.length,"UTF8");
                         st += s;
 
                         if (st.contains("\r")){
@@ -222,13 +265,14 @@ public final class Principal extends javax.swing.JFrame {
     private void initComponents() {
 
         PopupMenu = new javax.swing.JPopupMenu();
+        PopupMenuDown = new javax.swing.JPopupMenu();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         textAreaTerm = new javax.swing.JTextArea();
         textFieldMessage = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         ToolBar = new javax.swing.JToolBar();
-        ToggleButtonConnect = new javax.swing.JToggleButton();
+        LabelConect = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         LabelPortStatus = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -241,6 +285,11 @@ public final class Principal extends javax.swing.JFrame {
         MenuItemAcerca = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jScrollPane1.setAutoscrolls(true);
 
@@ -250,6 +299,7 @@ public final class Principal extends javax.swing.JFrame {
         textAreaTerm.setRows(5);
         jScrollPane1.setViewportView(textAreaTerm);
 
+        textFieldMessage.setToolTipText("");
         textFieldMessage.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 textFieldMessageKeyPressed(evt);
@@ -266,17 +316,13 @@ public final class Principal extends javax.swing.JFrame {
 
         ToolBar.setRollover(true);
 
-        ToggleButtonConnect.setBackground(new java.awt.Color(96, 96, 96));
-        ToggleButtonConnect.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/unc.png"))); // NOI18N
-        ToggleButtonConnect.setFocusable(false);
-        ToggleButtonConnect.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        ToggleButtonConnect.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        ToggleButtonConnect.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ToggleButtonConnectActionPerformed(evt);
+        LabelConect.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/unc.png"))); // NOI18N
+        LabelConect.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                LabelConectMouseClicked(evt);
             }
         });
-        ToolBar.add(ToggleButtonConnect);
+        ToolBar.add(LabelConect);
         ToolBar.add(jSeparator1);
 
         LabelPortStatus.setText("Disconnected");
@@ -379,19 +425,68 @@ public final class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void textFieldMessageKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textFieldMessageKeyPressed
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            try {
-                Globals.serial_port.writeString(textFieldMessage.getText() + "\r\n");
-                textFieldMessage.setText("");
-            } catch (SerialPortException ex) {
-                throw new RuntimeException(ex);
-            }
+//        if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+//            try {
+//                Globals.serial_port.writeString(textFieldMessage.getText() + "\r\n");
+//                history.add(textFieldMessage.getText());
+//                textFieldMessage.setText("");
+//            } catch (SerialPortException ex) {
+//                throw new RuntimeException(ex);
+//            }
+//        } else if(evt.getKeyCode() == KeyEvent.VK_DOWN) {
+//            
+//        }
+
+        
+        
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_ENTER:
+                try {
+                    Globals.serial_port.writeString(textFieldMessage.getText() + "\r\n");
+                    history.add(textFieldMessage.getText());
+                    history_lenght = history.size();
+//                    System.out.println(history_lenght);
+                    textFieldMessage.setText("");
+                } catch (SerialPortException ex) {
+                    throw new RuntimeException(ex);
+                }
+                break;
+            case KeyEvent.VK_UP:
+                //textFieldMessage.setText(history.get(index));
+                index = history_lenght-1 >= index+1 ? index+1 : index;
+//                System.out.println("Tamaño:" + history_lenght + " index:" + index);
+                textFieldMessage.setText(index >= 0?history.get(index):"");
+                
+                
+//                if( history_lenght >= index+1 ){
+//                    index++;
+//                    System.out.println("Tamaño:" + history_lenght + " +index:" + index);
+//                }
+                
+                break;
+            case KeyEvent.VK_DOWN:
+                //textFieldMessage.setText(history.get(index));
+                index = history_lenght-1 >= index-1 && index >= 0? index-1 : index;
+//                System.out.println("Tamaño:" + history_lenght + " index:" + index);
+                textFieldMessage.setText(index >= 0?history.get(index):"");
+                
+                
+//                if( history_lenght >= index-1 && index-1 >= 0){
+//                    index--;
+//                    System.out.println("Tamaño:" + history_lenght + " -index:" + index);
+//                }
+                
+                break;
+            default:
+                //throw new AssertionError();
         }
     }//GEN-LAST:event_textFieldMessageKeyPressed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             Globals.serial_port.writeString(textFieldMessage.getText() + "\r\n");
+            history.add(textFieldMessage.getText());
+            history_lenght = history.size();
             textFieldMessage.setText("");
         } catch (SerialPortException ex) {
             throw new RuntimeException(ex);
@@ -423,27 +518,6 @@ public final class Principal extends javax.swing.JFrame {
         Globals.w_about.setVisible(true);
     }//GEN-LAST:event_MenuItemAcercaActionPerformed
 
-    private void ToggleButtonConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ToggleButtonConnectActionPerformed
-        if(ToggleButtonConnect.isSelected()){
-            try {
-                Globals.p.Conectar(Globals.port);
-                ToggleButtonConnect.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/con.png")));
-                LabelPortStatus.setText("Connected");
-            } catch (SerialPortException ex) {
-                JOptionPane.showMessageDialog(this, ex);
-            }
-        } else {
-            try {
-                Globals.serial_port.closePort();
-                ToggleButtonConnect.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/unc.png")));
-                this.setTitle(Globals.title);
-                LabelPortStatus.setText("Disconnected");
-            } catch (SerialPortException ex) {
-                JOptionPane.showMessageDialog(this, ex);
-            }
-        }
-    }//GEN-LAST:event_ToggleButtonConnectActionPerformed
-
     private void MenuItemAutoScrollActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemAutoScrollActionPerformed
         // TODO add your handling code here:
         if(MenuItemAutoScroll.isSelected()){
@@ -454,8 +528,45 @@ public final class Principal extends javax.swing.JFrame {
         AutoScroll.setSelected(scroll);
     }//GEN-LAST:event_MenuItemAutoScrollActionPerformed
 
+    private void LabelConectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LabelConectMouseClicked
+        
+        if(connected){
+            try {
+                Globals.serial_port.closePort();
+                LabelConect.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/unc.png")));
+                connected = false;
+                LabelPortStatus.setText("Disconnected");
+            } catch (SerialPortException ex) {
+                JOptionPane.showMessageDialog(this, ex);
+            }
+            
+        } else {
+            try {
+                Globals.p.Conectar(Globals.port);
+                LabelConect.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/con.png")));
+                connected = true;
+                LabelPortStatus.setText("Connected");
+            } catch (SerialPortException ex) {
+                JOptionPane.showMessageDialog(this, ex);
+            }
+        }
+    }//GEN-LAST:event_LabelConectMouseClicked
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if(Globals.serial_port != null){
+            if(Globals.serial_port.isOpened()){
+                try {
+                    Globals.serial_port.closePort();
+                } catch (SerialPortException ex) {
+                    System.out.println(ex.getMessage());
+                }
+            }
+        }
+    }//GEN-LAST:event_formWindowClosing
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel LabelConect;
     private javax.swing.JLabel LabelPortStatus;
     private javax.swing.JMenu MenuConfiguration;
     private javax.swing.JMenu MenuFile;
@@ -465,7 +576,7 @@ public final class Principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem MenuItemPort;
     private javax.swing.JMenuItem MenuItemSave;
     private javax.swing.JPopupMenu PopupMenu;
-    private javax.swing.JToggleButton ToggleButtonConnect;
+    private javax.swing.JPopupMenu PopupMenuDown;
     private javax.swing.JToolBar ToolBar;
     private javax.swing.JButton jButton1;
     private javax.swing.JMenuBar jMenuBar1;

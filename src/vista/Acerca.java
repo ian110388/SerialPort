@@ -65,7 +65,7 @@ public class Acerca extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Angel Ivan");
 
-        jToggleButton1.setText("1.0.1");
+        jToggleButton1.setText("1.0.2");
         jToggleButton1.setEnabled(false);
 
         jLayeredPane1.setLayer(LabelIcon, javax.swing.JLayeredPane.DEFAULT_LAYER);

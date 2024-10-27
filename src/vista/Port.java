@@ -248,7 +248,7 @@ public class Port extends javax.swing.JFrame {
     private void ButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonOkActionPerformed
         Globals.port = ComboPort.getSelectedItem().toString();
         
-        System.out.println(Globals.serial_port);
+        //System.out.println(Globals.serial_port);
         
         if(Globals.serial_port != null){
             System.out.println("El puerto no es nulo");
